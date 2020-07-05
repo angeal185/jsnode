@@ -3,7 +3,7 @@ import { router } from './jsnode.mjs';
 
 router.on('/', function(request, stream) {
 
-  console.log(request)
+  console.log(stream.js(request))
   stream.setCookie('name', 'value', {
     'path': '/',
     'secure': true,

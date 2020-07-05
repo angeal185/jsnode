@@ -221,7 +221,9 @@ Stream.prototype = {
   render(data,cb){
    this.settings.render(this,data,cb);
    return this;
-  }
+ },
+ js: JSON.stringify,
+ jp: JSON.parse
 }
 
 const router = new Router();
