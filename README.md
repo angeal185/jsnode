@@ -118,9 +118,9 @@ import { router } from './jsnode.mjs';
 
 
 router
-.on('/', function(req, res) {
+.on('/', function(request, stream) {
 
-  res  
+  stream  
   .render({test: 'working'}, function(err){
     if(err){return console.error(err)}
   })
@@ -140,14 +140,14 @@ router
 
 
 router
-.on('/test_basic', function(req, res) {
-  console.log(res.data) // {test:'basic'}
+.on('/test_basic', function(request, stream) {
+  console.log(request.data) // {test:'basic'}
 })
 
-.on('/test_params', function(req, res) {
+.on('/test_params', function(request, stream) {
 
-  if(req.params){
-    console.log(req.params.get('test')) // ok
+  if(request.params){
+    console.log(request.params.get('test')) // ok
   }
 
 })
@@ -164,15 +164,15 @@ router.rout('/test_params?test=ok', {
 
 #### render
 
-router.on('/', function(req, res) {
+router.on('/', function(request, stream) {
 
-  res
+  stream
   .setCookie('name', 'value', { // add cookie
     'path': '/',
     'secure': true,
     'max-age': 999999
   })
-  .render(res.data, function(err){
+  .render(request.data, function(err){
     if(err){return console.error(err)}
   })
 
@@ -180,10 +180,10 @@ router.on('/', function(req, res) {
 
 #### download
 
-router.on('/download', function(req, res) {
+router.on('/download', function(request, stream) {
 
     let data = JSON.stringify({"test":"!@#$<}(*&^%$ok"});
-    res.download(
+    stream.download(
       "test.json", // filename ~ required
       data, // file data ~ required
       'application/json', // content-type ~ optional
@@ -195,10 +195,10 @@ router.on('/download', function(req, res) {
 #### fetch
 
 router
-.on('/fetch_default', function(req, res) {
+.on('/fetch_default', function(request, stream) {
 
   //fallback to default.fetch
-  res.fetch('./app/data/index.json', function(err, data){
+  stream.fetch('./app/data/index.json', function(err, data){
     if(err){return console.error(err)}
     console.log(data.headers) // return response headers object
     console.log(data.json) // return json data
@@ -206,7 +206,7 @@ router
   })
 
 })
-.on('/fetch_post', function(req, res) {
+.on('/fetch_post', function(request, stream) {
   // cors post example
   let obj = {
     method: 'post',
@@ -217,10 +217,10 @@ router
       'Sec-Fetch-mode': 'cors',
       'Sec-Fetch-Site': 'cross-site'
     },
-    body: res.js({example: 'working'})
+    body: stream.js({example: 'working'})
   }
   //fallback to default.fetch
-  res.fetch('https/someurl.com/api', obj, function(err, data){
+  stream.fetch('https/someurl.com/api', obj, function(err, data){
     if(err){return console.error(err)}
     console.log(data.headers) // return response headers object
     console.log(data.json) // return json data
@@ -231,12 +231,12 @@ router
 
 #### params
 
-router.on('/', function(req, res) {
+router.on('/', function(request, stream) {
 
-  console.log(req)
+  console.log(request)
 
-  if(req.params){
-    console.log(req.params.get('test')) // get params by key
+  if(request.params){
+    console.log(request.params.get('test')) // get params by key
     console.log(params.getAll('foo')) // get all of key ["1","4"].
     console.log(params.has('bar') === true); // true/false param exists
     console.log(params.keys()) // return params keys
@@ -257,9 +257,9 @@ router.on('/', function(req, res) {
 
 #### cookies
 
-router.on('/', function(req, res) { // add cookie
+router.on('/', function(request, stream) { // add cookie
 
-  res
+  stream
   .setCookie('name', 'value', {
     'path': '/',
     'secure': true,
@@ -267,31 +267,31 @@ router.on('/', function(req, res) { // add cookie
   })
   .delCookie('name') // delete cookie
 
-  console.log(res.getCookie('name')) // get a cookie
+  console.log(stream.getCookie('name')) // get a cookie
 
 })
 
 #### sessionStorage
 
-router.on('/', function(req, res) {
-  res
+router.on('/', function(request, stream) {
+  stream
   .setSs('key', {test: 'working'}) // set stringified session storage
 
   .delSs('key') // delete session storage item
 
-  console.log(res.getSs('key')) // get parsed session storage
+  console.log(stream.getSs('key')) // get parsed session storage
 
 })
 
 #### localStorage
 
-router.on('/', function(req, res) {
-  res
+router.on('/', function(request, stream) {
+  stream
   .setLs('key', {test: 'working'}) // set stringified local storage
 
   .delLs('key') // delete local storage item
 
-  console.log(res.getLs('key')) // get parsed local storage
+  console.log(stream.getLs('key')) // get parsed local storage
 
 })
 

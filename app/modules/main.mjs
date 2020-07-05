@@ -1,10 +1,10 @@
 import { router } from './jsnode.mjs';
 
 
-router.on('/', function(req, res) {
+router.on('/', function(request, stream) {
 
-  console.log(req)
-  res.setCookie('name', 'value', {
+  console.log(request)
+  stream.setCookie('name', 'value', {
     'path': '/',
     'secure': true,
     'max-age': 999999
@@ -17,54 +17,55 @@ router.on('/', function(req, res) {
 */
 
 
-  //res.setSs('key', 'val')
+  //stream.setSs('key', 'val')
 
 
-  //console.log(res.getCookie('name'))
-  //res.delCookie('name')
+  //console.log(stream.getCookie('name'))
+  //stream.delCookie('name')
 
 })
 
-.on('/home', function(req, res) {
+.on('/home', function(request, stream) {
 
-  if(req.params){
-    console.log(req.params.get('test'))
+  if(request.params){
+    console.log(request.params.get('test'))
   }
 
-/*
-  res.render({test: 'working'}, function(err){
-    if(err){return console.error(err)}
-  })
-*/
-  console.log(req)
+  /*
+    stream.render({test: 'working'}, function(err){
+      if(err){return console.error(err)}
+    })
+  */
+
+  console.log(request)
 
 })
 
-.on('/home2', function(req, res) {
+.on('/home2', function(request, stream) {
 
-  if(req.params){
-    console.log(req.params.get('test'))
+  if(request.params){
+    console.log(request.params.get('test'))
   }
-  console.log(req)
+  console.log(request)
 
-  res.render({test: 'working2'}, function(err){
+  stream.render({test: 'working2'}, function(err){
     if(err){return console.error(err)}
   })
 
 })
 
-.on('/download_example', function(req, res) {
-  res.download(
-    "test.json", // filename ~ required
+.on('/download_example', function(request, stream) {
+  stream.download(
+    "test.json", // filename ~ requestuired
     JSON.stringify({"test":"!@#$<}(*&^%$ok"}), // file data ~ required
     'application/json', // content-type ~ optional
     'utf8' // content-encoding ~ optional
   );
 })
 
-.on('/fetch_example', function(req, res) {
+.on('/fetch_example', function(request, stream) {
 
-  res.fetch('./app/data/index.json', function(err, data){
+  stream.fetch('./app/data/index.json', function(err, data){
     if(err){return console.error(err)}
     console.log(data)
   })
@@ -78,8 +79,3 @@ router.on('/', function(req, res) {
 .init().listen().validate();
 
 router.rout('/home?test="ok"', {'test':'sdfsdfsd'}) //fallback to config.base_data
-
-
-
-
-// Start file download.
