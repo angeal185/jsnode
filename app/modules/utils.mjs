@@ -111,15 +111,17 @@ const utils = {
         return Promise.reject(new Error(res.statusText))
       }
     }).then(function(data){
-      let ctype = headers['content-type'];
-
-      headers.body = data;
-
-      if (ctype && ctype.includes('application/json')) {
-        headers.json = JSON.parse(data)
+      let ctype = headers['content-type'],
+      obj = {
+        headers: headers,
+        body: data
       }
 
-      cb(false, headers);
+      if (ctype && ctype.includes('application/json')) {
+        obj.json = JSON.parse(data)
+      }
+
+      cb(false, obj);
 
       headers = data = null;
     }).catch(function(err){
