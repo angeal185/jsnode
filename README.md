@@ -1,11 +1,11 @@
 # jsnode
 A speed oriented javascript browser web framework with nodejs like syntax
 
-## status
-* framework ~ working but under development
+# status
+* framework ~ working but under feature development
 * documentation ~ incomplete
 
-## goals
+# goals
 
 * create a browser web framework  that is ideal for full-stack js development.
 
@@ -37,7 +37,7 @@ A speed oriented javascript browser web framework with nodejs like syntax
 * the framework must have a close to zero learning curve duration
 
 
-## defaults
+# defaults
 
 * all default vals/functions are fully customizable
 ```js
@@ -108,7 +108,7 @@ export { defaults, app_main }
 
 ```
 
-#router
+# router
 
 ```js
 
