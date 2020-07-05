@@ -118,7 +118,7 @@ import { router } from './jsnode.mjs';
 
 
 router
-.on('/', function(req, res) { // add cookie
+.on('/', function(req, res) {
 
   res  
   .render({test: 'working'}, function(err){
@@ -180,7 +180,7 @@ router.on('/', function(req, res) {
 
 #### download
 
-router.on('/download', function(req, res) { // add cookie
+router.on('/download', function(req, res) {
 
     let data = JSON.stringify({"test":"!@#$<}(*&^%$ok"});
     res.download(
@@ -273,7 +273,7 @@ router.on('/', function(req, res) { // add cookie
 
 #### sessionStorage
 
-router.on('/', function(req, res) { // add cookie
+router.on('/', function(req, res) {
   res
   .setSs('key', {test: 'working'}) // set stringified session storage
 
@@ -285,7 +285,7 @@ router.on('/', function(req, res) { // add cookie
 
 #### localStorage
 
-router.on('/', function(req, res) { // add cookie
+router.on('/', function(req, res) {
   res
   .setLs('key', {test: 'working'}) // set stringified local storage
 
