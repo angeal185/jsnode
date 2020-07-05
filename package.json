@@ -1,0 +1,20 @@
+{
+  "name": "jsnode",
+  "version": "1.0.0-alpha",
+  "description": "A speed oriented javascript browser web framework with nodejs like syntax",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angeal185/jsnode.git"
+  },
+  "keywords": [],
+  "author": "ben eaves",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angeal185/jsnode/issues"
+  },
+  "homepage": "https://github.com/angeal185/jsnode#readme"
+}
