@@ -3,7 +3,9 @@ import { router } from './jsnode.mjs';
 
 router.on('/', function(request, stream) {
 
-  console.log(stream.js(request))
+  let data = '{"test":"json.parse"}'
+
+  console.log(stream.jp(data)) // {test: 'json.parse'}
   stream.setCookie('name', 'value', {
     'path': '/',
     'secure': true,

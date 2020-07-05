@@ -295,13 +295,65 @@ router.on('/', function(request, stream) {
 
 ```
 
-#### cookies
+#### stream.js
+
+```js
+//stream.params
+router.on('/', function(r, s) {
+
+  let data = {
+    test: 'json.stringify'
+  }
+
+  console.log(s.js(data)) // '{"test":"json.stringify"}'
+
+
+  console.log(s.js(data,0,2))
+  /*
+    {
+      "test":"json.stringify"
+    }
+  */
+})
+
+```
+
+#### stream.jp
 
 ```js
 
-// stream.setCookie
-// stream.getCookie
-// stream.delCookie
+router.on('/', function(r, s) {
+
+  let data = '{"test":"json.parse"}'
+
+  console.log(s.jp(data)) // {test: "json.parse"}
+
+})
+
+```
+
+#### stream.empty
+
+```js
+
+router.on('/', function(request, stream) {
+
+  stream.empty() // remove app_main childNodes
+
+
+  stream.empty(document.body)  // remove any elements childNodes
+
+})
+
+```
+
+#### cookies
+
+* stream.setCookie
+* stream.getCookie
+* stream.delCookie
+
+```js
 
 router.on('/', function(request, stream) { // add cookie
 
@@ -320,10 +372,11 @@ router.on('/', function(request, stream) { // add cookie
 
 #### sessionStorage
 
+* stream.setSs
+* stream.getSs
+* stream.delSs
+
 ```js
-// stream.setSs
-// stream.getSs
-// stream.delSs
 
 router.on('/', function(request, stream) {
 
@@ -338,10 +391,12 @@ router.on('/', function(request, stream) {
 
 #### localStorage
 
+* stream.setLs
+* stream.getLs
+* stream.delLs
+
 ```js
-// stream.setLs
-// stream.getLs
-// stream.delLs
+
 router.on('/', function(request, stream) {
   stream.setLs('key', {test: 'working'}) // set stringified local storage
   .delLs('key') // delete local storage item

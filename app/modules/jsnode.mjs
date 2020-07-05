@@ -178,7 +178,7 @@ Stream.prototype = {
     return this
   },
   empty(x){
-    utils.download(this.settings, x);
+    utils.empty(this.settings, x);
     return this
   },
   fetch(src, options, cb){
