@@ -136,9 +136,9 @@ router.on('/', function(request, stream) {
 //router.on
 import { router } from './jsnode.mjs';
 
-router.on('/', function(request, stream) {
-  console.log(request) // request object
-  console.log(stream) // stream object
+router.on('/', function(req, res) {
+  console.log(req) // request object
+  console.log(res) // stream object
 })
 
 ```
