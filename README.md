@@ -108,18 +108,15 @@ export { defaults, app_main }
 
 ```
 
-## API
+#router
 
 ```js
 
 import { router } from './jsnode.mjs';
 
-#### router
-
 router.on('/', function(request, stream) {
 
-  stream  
-  .render({test: 'working'}, function(err){
+  stream.render({test: 'working'}, function(err){
     if(err){return console.error(err)}
   })
 
@@ -132,10 +129,36 @@ router.on('/', function(request, stream) {
 .init() // build app base defaults.init function ~ optional ~ called first
 .listen() // initialize router and start listening for rout calls ~ called second
 .validate() // check/remove stale cache entries ~ optional ~ called third
+```
 
+#### router.on
+```js
+//router.on
+import { router } from './jsnode.mjs';
 
-#### rout
+router.on('/', function(request, stream) {
+  console.log(request) // request object
+  console.log(stream) // stream object
+})
 
+```
+
+#### router.off
+```js
+//router.off
+import { router } from './jsnode.mjs';
+
+router.on('/delete_rout', function(request,stream){
+
+})
+.off('/delete_rout')// delete rout '/delete_rout'
+
+```
+
+#### router.rout
+
+```js
+//router.rout
 
 router.on('/test_basic', function(request, stream) {
   console.log(request.data) // {test:'basic'}
@@ -158,8 +181,15 @@ router.rout('/test_basic', {
 router.rout('/test_params?test=ok', {
   'test':'sdfsdfsd'
 })
+```
 
-#### render
+
+# stream
+
+#### stream.render
+
+```js
+//stream.render
 
 router.on('/', function(request, stream) {
 
@@ -174,8 +204,12 @@ router.on('/', function(request, stream) {
 
 })
 
+```
+
 #### download
 
+```js
+//stream.download
 router.on('/download', function(request, stream) {
 
     let data = JSON.stringify({"test":"!@#$<}(*&^%$ok"});
@@ -188,10 +222,14 @@ router.on('/download', function(request, stream) {
 
 })
 
-#### fetch
+```
 
-router
-.on('/fetch_default', function(request, stream) {
+#### stream.fetch
+
+```js
+//stream.fetch
+
+router.on('/fetch_default', function(request, stream) {
 
   //fallback to default.fetch
   stream.fetch('./app/data/index.json', function(err, data){
@@ -225,8 +263,12 @@ router
 
 })
 
-#### params
+```
 
+#### stream.params
+
+```js
+//stream.params
 router.on('/', function(request, stream) {
 
   console.log(request)
@@ -251,7 +293,15 @@ router.on('/', function(request, stream) {
 
 })
 
+```
+
 #### cookies
+
+```js
+
+// stream.setCookie
+// stream.getCookie
+// stream.delCookie
 
 router.on('/', function(request, stream) { // add cookie
 
@@ -266,7 +316,14 @@ router.on('/', function(request, stream) { // add cookie
 
 })
 
+```
+
 #### sessionStorage
+
+```js
+// stream.setSs
+// stream.getSs
+// stream.delSs
 
 router.on('/', function(request, stream) {
 
@@ -277,8 +334,14 @@ router.on('/', function(request, stream) {
 
 })
 
+```
+
 #### localStorage
 
+```js
+// stream.setLs
+// stream.getLs
+// stream.delLs
 router.on('/', function(request, stream) {
   stream.setLs('key', {test: 'working'}) // set stringified local storage
   .delLs('key') // delete local storage item
@@ -286,7 +349,5 @@ router.on('/', function(request, stream) {
   console.log(stream.getLs('key')) // get parsed local storage
 
 })
-
-
 
 ```
