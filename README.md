@@ -206,7 +206,7 @@ router.on('/', function(request, stream) {
 
 ```
 
-#### download
+#### stream.download
 
 ```js
 //stream.download
