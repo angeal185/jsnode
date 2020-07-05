@@ -153,21 +153,21 @@ router
 })
 
 // navigate with data
-router.rout('/test_basic', { // navigate with params
+router.rout('/test_basic', {
   test:'basic'
 })
 
 // navigate with data and params
-router.rout('/test_params?test=ok', { // navigate with params
+router.rout('/test_params?test=ok', {
   'test':'sdfsdfsd'
 })
 
 #### render
 
-router.on('/', function(req, res) { // add cookie
+router.on('/', function(req, res) {
 
   res
-  .setCookie('name', 'value', {
+  .setCookie('name', 'value', { // add cookie
     'path': '/',
     'secure': true,
     'max-age': 999999
