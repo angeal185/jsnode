@@ -116,9 +116,7 @@ import { router } from './jsnode.mjs';
 
 #### router
 
-
-router
-.on('/', function(request, stream) {
+router.on('/', function(request, stream) {
 
   stream  
   .render({test: 'working'}, function(err){
@@ -131,16 +129,15 @@ router
   console.log(err)
 })
 
-.init() // build app base defaults.init function ~ optional
-.listen() // initialize router and start listening for rout calls
-.validate() // check/remove stale cache entries ~ optional
+.init() // build app base defaults.init function ~ optional ~ called first
+.listen() // initialize router and start listening for rout calls ~ called second
+.validate() // check/remove stale cache entries ~ optional ~ called third
 
 
 #### rout
 
 
-router
-.on('/test_basic', function(request, stream) {
+router.on('/test_basic', function(request, stream) {
   console.log(request.data) // {test:'basic'}
 })
 
@@ -166,8 +163,7 @@ router.rout('/test_params?test=ok', {
 
 router.on('/', function(request, stream) {
 
-  stream
-  .setCookie('name', 'value', { // add cookie
+  stream.setCookie('name', 'value', { // add cookie
     'path': '/',
     'secure': true,
     'max-age': 999999
@@ -259,8 +255,7 @@ router.on('/', function(request, stream) {
 
 router.on('/', function(request, stream) { // add cookie
 
-  stream
-  .setCookie('name', 'value', {
+  stream.setCookie('name', 'value', {
     'path': '/',
     'secure': true,
     'max-age': 999999
@@ -274,9 +269,8 @@ router.on('/', function(request, stream) { // add cookie
 #### sessionStorage
 
 router.on('/', function(request, stream) {
-  stream
-  .setSs('key', {test: 'working'}) // set stringified session storage
 
+  stream.setSs('key', {test: 'working'}) // set stringified session storage
   .delSs('key') // delete session storage item
 
   console.log(stream.getSs('key')) // get parsed session storage
@@ -286,9 +280,7 @@ router.on('/', function(request, stream) {
 #### localStorage
 
 router.on('/', function(request, stream) {
-  stream
-  .setLs('key', {test: 'working'}) // set stringified local storage
-
+  stream.setLs('key', {test: 'working'}) // set stringified local storage
   .delLs('key') // delete local storage item
 
   console.log(stream.getLs('key')) // get parsed local storage
