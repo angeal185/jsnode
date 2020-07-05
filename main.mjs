@@ -1,4 +1,4 @@
-import { router } from './jsnode.mjs';
+import { router } from './jsnode/jsnode.mjs';
 
 
 router.on('/', function(request, stream) {

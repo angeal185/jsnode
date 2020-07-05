@@ -3,7 +3,7 @@ let app_main = document.createElement('app-main');
 
 // app defaults
 let defaults = {
-  type: 'hash',
+  version: '1.0.0', // don't delete me
   origin: 'http://localhost:8000',
   params: true,
   error: 'error',
