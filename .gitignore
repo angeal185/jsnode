@@ -7,3 +7,6 @@ yarn-error.log*
 
 server.py
 cert
+index.html
+/app/
+main.js

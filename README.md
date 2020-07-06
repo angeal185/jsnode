@@ -5,54 +5,38 @@ A speed oriented javascript browser web framework with nodejs like syntax
 * framework ~ working but under feature development
 * documentation ~ incomplete
 
-# goals
 
-* create a browser web framework  that is ideal for full-stack js development.
+# build
 
-* the creation of the framework "must" be speed oriented. the code used to create jsnode
-  will not contain any so called "synthetic-sugar" that is detrimental to the speed of end
-  product. native js must be used over modern js concerning speed.
-  the user is free to use any "synthetic-sugar" they wish in creating their app.
+```js
+// cwd
+const { build } = require('jsnode');
 
-* the framework should not obfuscate an entry/mid level developers understanding of js,
-  as many browser based frameworks do. there will be no human made euphemisms or concepts
-  that confuse or mislead the user in their understanding of how javascript works.
+build()
 
-* the framework should be usable for entry/mid level developers and easily extendable/
-  highly customizable for mid/high level developers.
 
-* the framework will have its own optional high speed rendering engine but this
-  engine can be replaced entirely with any other template engine the user wishes to implement.
-  furthermore, the render method will be able to use vanilla javascript / plain html as
-  an alternative.
+```
 
-* the framework will produce a spa (single page app) without the need for any specific server
-  modifications. it will rely on browser storage as opposed to history state to store state data.
-
-* all router stream methods are to be optional. the user should be able to include/exclude
-  all stream methods on a per-case basis to their build.
-
-* the framework will never force a user to use external dependencies
-
-* the framework must have a close to zero learning curve duration
+# setup
 
 
 # defaults
 
 * all default vals/functions are fully customizable
 ```js
-// defaults.mjs
+// jsnode/defaults.mjs
 
-// optional cached reference to app-main object for render
-let app_main = document.createElement('app-main');
+//cached reference to app-main object
+let app_main = x('div');
 
 // app defaults
 let defaults = {
+  version: '1.0.0',
   origin: 'http://localhost:8000', // app origin
   params: true, // parse rout params
   error: 'error', // error handler listener
   base_path: '/', // app base path
-  base_data: { // app base default data
+  base_data: { // app base default lanfing data, if any
     msg: 'home psdfsath'
   },
   each: { // functions to occur on every rout
@@ -81,26 +65,23 @@ let defaults = {
     }
   },
   app_main: app_main, // reference to app-main element
-  init: function(){ // function to call prior to initializing router
-    document.body.append(app_main);
-    return this
-  },
-  render: function(stream, data, cb){ //render function
-    // add custom render function here.
-    // jsnode is compatibe with any template engine render/pre-rendered function/s
-    // or vanillajs / parsed html
-    try {
-      stream.empty();
-      let ele = stream.settings.app_main;
-      let p = document.createElement('p');
-      p.textContent = data.test;
-      ele.append(p)
-      cb(false)
-    } catch (err) {
-      cb(err)
-    }
-    return this
+  app_main: app_main,
+  init: function(){
+    //example init
+    document.head.append(x('link', {
+      href: '',
+      rel: 'stylesheet'
+    }))
 
+    document.body.append(xtpl['build'](app_main));
+
+    return this;
+
+  },
+  render: function(stream, path, data, cb){
+    //default engine
+    xrender(stream, xtpl[path], data, xdata[path], cb);
+    return this;
   }
 }
 
@@ -116,7 +97,7 @@ import { router } from './jsnode.mjs';
 
 router.on('/', function(request, stream) {
 
-  stream.render({test: 'working'}, function(err){
+  stream.render('index', request.data, function(err){
     if(err){return console.error(err)}
   })
 
@@ -198,13 +179,58 @@ router.on('/', function(request, stream) {
     'secure': true,
     'max-age': 999999
   })
-  .render(request.data, function(err){
+  stream.render('index', function(err){
     if(err){return console.error(err)}
+    //do something
+
+  })
+
+})
+
+router.on('/about', function(request, stream) {
+
+  stream.render('about', {some: 'data'}, function(err){
+    if(err){return console.error(err)}
+    //do something
   })
 
 })
 
 ```
+
+#### stream.redirect
+
+redirect path
+```js
+//stream.render
+
+router.on('/path1', function(request, stream) {
+
+  // navigate away from path1 to path2 within the site
+  // history state is added
+  stream.redirect('/path2', {data: 'redirecting'})
+
+})
+
+```
+
+#### stream.replace
+
+replace state
+```js
+//stream.render
+
+router.on('/path1', function(request, stream) {
+
+  // load path2 into view without navigating away from path1
+  // no history state is added
+
+  stream.replace('/path2', {data: 'redirecting'})
+
+})
+
+```
+
 
 #### stream.download
 
@@ -406,3 +432,35 @@ router.on('/', function(request, stream) {
 })
 
 ```
+
+
+# goals
+
+* create a browser web framework  that is ideal for full-stack js development.
+
+* the creation of the framework "must" be speed oriented. the code used to create jsnode
+  will not contain any so called "synthetic-sugar" that is detrimental to the speed of end
+  product. native js must be used over modern js concerning speed.
+  the user is free to use any "synthetic-sugar" they wish in creating their app.
+
+* the framework should not obfuscate an entry/mid level developers understanding of js,
+  as many browser based frameworks do. there will be no human made euphemisms or concepts
+  that confuse or mislead the user in their understanding of how javascript works.
+
+* the framework should be usable for entry/mid level developers and easily extendable/
+  highly customizable for mid/high level developers.
+
+* the framework will have its own optional high speed rendering engine but this
+  engine can be replaced entirely with any other template engine the user wishes to implement.
+  furthermore, the render method will be able to use vanilla javascript / plain html as
+  an alternative.
+
+* the framework will produce a spa (single page app) without the need for any specific server
+  modifications. it will rely on browser storage as opposed to history state to store state data.
+
+* all router stream methods are to be optional. the user should be able to include/exclude
+  all stream methods on a per-case basis to their build.
+
+* the framework will never force a user to use external dependencies
+
+* the framework must have a close to zero learning curve duration
