@@ -373,6 +373,30 @@ router.on('/', function(request, stream) {
 
 ```
 
+#### stream.append
+
+#### stream.path
+
+#### stream.blob
+
+#### stream.url.parse
+
+#### stream.url.add
+
+#### stream.url.del
+
+#### stream.base64.enc
+
+#### stream.base64.dec
+
+#### stream.hex.enc
+
+#### stream.hex.dec
+
+#### stream.uint8.enc
+
+#### stream.uint8.dec
+
 #### cookies
 
 * stream.setCookie
