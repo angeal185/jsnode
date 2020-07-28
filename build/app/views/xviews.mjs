@@ -1,12 +1,27 @@
-import { x } from '../jsnode/xscript.mjs';
+import { x } from '../modules/xscript.mjs';
 import { xdata } from '../data/xdata.mjs';
-import { router } from '../jsnode/jsnode.mjs';
+import { router } from '../modules/jsnode.mjs';
 
-const xtpl = {
+const xviews = {
+  build(app_main){
+    let item = x('main-view',
+    x('nav', {class:'navbar navbar-dark bg-dark justify-content-center'},
+      x('a',{class: 'navbar-brand'}, 'jsnode')
+    ),
+    x('div', {
+        class: 'container'
+      }, app_main)
+    )
+
+    return item
+  },
+  error(stream, data){
+    return x('code', stream.js(data))
+  },
+
+  //views
   index(stream, data){
-    let item = x('div', {
-        class: 'mt-4'
-      },
+    let item = x('div', {class: 'mt-4'},
       x('p', data.msg)
     )
 
@@ -20,22 +35,7 @@ const xtpl = {
     )
 
     return item;
-  },
-  error(stream, data){
-    return x('code', stream.js(data))
-  },
-  build(app_main){
-    let item = x('div',
-    x('nav', {class:'navbar navbar-dark bg-dark justify-content-center'},
-      x('a',{class: 'navbar-brand'}, 'jsnode')
-    ),
-    x('div', {
-        class: 'container'
-      }, app_main)
-    )
-
-    return item
   }
 }
 
-export { xtpl }
+export { xviews }

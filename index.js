@@ -11,9 +11,9 @@ function copyFolderSync(from, to) {
   try {
     fs.mkdirSync(to);
   } catch(e) {}
-
-  fs.readdirSync(from).forEach((element) => {
-    const stat = fs.lstatSync(path.join(from, element));
+  let stat;
+  fs.readdirSync(from).forEach(function(element){
+    stat = fs.lstatSync(path.join(from, element));
     if (stat.isFile()) {
       fs.copyFileSync(path.join(from, element), path.join(to, element));
     } else if (stat.isSymbolicLink()) {
@@ -21,16 +21,15 @@ function copyFolderSync(from, to) {
     } else if (stat.isDirectory()) {
       copyFolderSync(path.join(from, element), path.join(to, element));
     }
+    stat = null;
   });
 }
 
 
 function build(){
-
   copyFolderSync(app, cwd + '/app');
-  copyFolderSync(base, cwd + '/app/jsnode');
+  copyFolderSync(base, cwd + '/app/modules');
   fs.copyFileSync(dir + '/build/index.html', cwd + '/index.html');
-
 }
 
 

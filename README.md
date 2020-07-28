@@ -24,68 +24,90 @@ build()
 
 * all default vals/functions are fully customizable
 ```js
-// jsnode/defaults.mjs
+// ./app/defaults.mjs
+
+import { x, xrender } from './modules/xscript.mjs';
+import { xutils } from './modules/xutils.mjs';
+import { xviews } from './views/xviews.mjs';
+import { xdata } from './data/xdata.mjs';
 
 //cached reference to app-main object
 let app_main = x('div');
 
-// app defaults
-let defaults = {
-  version: '1.0.0',
-  origin: 'http://localhost:8000', // app origin
-  params: true, // parse rout params
-  error: 'error', // error handler listener
-  base_path: '/', // app base path
-  base_data: { // app base default lanfing data, if any
-    msg: 'home psdfsath'
-  },
-  each: { // functions to occur on every rout
-    before: function(dest) { // before rout ~ optional
+// app default functions
+let defaults = Object.assign(xdata.default, {
+  app_main: app_main,
+  each: {
+    before: function(dest) {
       // return false;  cancel rout
       return true // continue to rout
     },
-    after: function(dest) { // after rout ~ optional
+    after: function(dest) {
       document.title = dest.slice(1)
     }
   },
-  storage: { // state storage
-    max_age: 9999999999, // state storage max-age ms
-    prefix: 'rt' // state storage key prefix
-  },
-  stream: { // stream method defaults/fallbacks
-    download: { //download fallbacks
-      type: 'text/plain',
-      charset: 'utf-8'
-    },
-    fetch: { //fetch fallbacks
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-  },
-  app_main: app_main, // reference to app-main element
-  app_main: app_main,
   init: function(){
-    //example init
-    document.head.append(x('link', {
-      href: '',
-      rel: 'stylesheet'
-    }))
-
-    document.body.append(xtpl['build'](app_main));
+    xutils.build(xdata, xviews['build'](app_main));
 
     return this;
-
   },
   render: function(stream, path, data, cb){
-    //default engine
-    xrender(stream, xtpl[path], data, xdata[path], cb);
+    xrender(stream, xviews[path], data, xdata[path], cb);
     return this;
+  }
+})
+
+export { defaults, app_main }
+
+```
+
+```js
+// app/data/xdata.mjs
+
+
+const xdata = {
+  default:{
+    version: '1.0.0', // app version
+    origin: 'http://localhost:8000', // app origin
+    params: true, // parse rout params
+    error: 'error', // error handler listener
+    base_path: '/index', // app base path
+    delete_meta: 10000, // automatically remove meta timeout in ms || 0/false
+    base_script_name: 'main', //main script name attr
+    styles:[{ // styles to be added
+      href: 'app/css/app.css',
+      rel: 'stylesheet'
+    }],
+    js_head:[], // js to be added to head
+    js_body:[], // js to be added to body
+    storage: { // state storage
+       max_age: 9999999999, // state storage max-age ms
+       prefix: 'rt' // state storage key prefix
+     },
+     stream: { // stream method defaults/fallbacks
+       download: { //download fallbacks
+         type: 'text/plain',
+         charset: 'utf-8'
+       },
+       fetch: { //fetch fallbacks
+         method: 'GET',
+         headers: {
+           'Content-Type': 'application/json'
+         }
+       }
+     }
+  },
+  // rout default data
+  index: {
+    msg: 'Big things have small beginnings.'
+  },
+  home: {
+    msg: 'welcome message 2'
   }
 }
 
-export { defaults, app_main }
+export { xdata }
+
 
 ```
 
@@ -93,7 +115,7 @@ export { defaults, app_main }
 
 ```js
 
-import { router } from './jsnode.mjs';
+import { router } from './app/modules/jsnode.mjs';
 
 router.on('/', function(request, stream) {
 
@@ -102,7 +124,13 @@ router.on('/', function(request, stream) {
   })
 
 })
+.on('/home', function(request, stream) {
 
+  stream.render('home', request.data, function(err){
+    if(err){return console.error(err)}
+  })
+
+})
 .on('error', function(err) { // router error handler
   console.log(err)
 })
@@ -179,6 +207,7 @@ router.on('/', function(request, stream) {
     'secure': true,
     'max-age': 999999
   })
+
   stream.render('index', function(err){
     if(err){return console.error(err)}
     //do something
@@ -186,8 +215,7 @@ router.on('/', function(request, stream) {
   })
 
 })
-
-router.on('/about', function(request, stream) {
+.on('/about', function(request, stream) {
 
   stream.render('about', {some: 'data'}, function(err){
     if(err){return console.error(err)}
@@ -268,7 +296,7 @@ router.on('/fetch_default', function(request, stream) {
 })
 .on('/fetch_post', function(request, stream) {
   // cors post example
-  let obj = {
+  let obj = { // optional || fallback to xdata.default.stream.fetch
     method: 'post',
     cache: 'no-cache',
     headers: {
@@ -375,27 +403,121 @@ router.on('/', function(request, stream) {
 
 #### stream.append
 
+```js
+
+router.on('/', function(request, stream) {
+  // append elements to app-main
+  stream.append(x('p', 'text appended to app-main'))
+
+})
+
+```
+
 #### stream.path
+
+```js
+
+router.on('/example', function(request, stream) {
+  // return parsed path details
+  console.log(
+    stream.path(request.data.filename)
+  )
+  //{fileName: "file.js", baseName: "file", ext: "js", dirName: "/path/to"}
+
+})
+
+router.rout('/example', {filename: '/path/to/file.js'})
+
+```
 
 #### stream.blob
 
+```js
+router.on('/example', function(request, stream) {
+  // create blob object from data
+  console.log(
+    stream.blob(...request.data.blob)
+  )
+  //Blob {size: 9, type: "plain/text;utf-8"}
+
+})
+
+router.rout('/example', {blob: ['some test', 'plain/text','utf-8']})
+
+```
+
 #### stream.url.parse
+
+```js
+
+router.on('/example', function(request, stream) {
+  // return parsed url object
+  console.log(
+    stream.url.parse(request.data.path)
+  )
+  /*
+  {
+    hash: ""
+    host: "www.someurl.com"
+    hostname: "www.someurl.com"
+    href: "https://www.someurl.com/index.js"
+    origin: "https://www.someurl.com"
+    password: ""
+    pathname: "/index.js"
+    port: ""
+    protocol: "https:"
+    search: ""
+    searchParams: URLSearchParams {}
+    username: ""
+  }
+  */
+})
+
+router.rout('/example', {path: 'https://www.someurl.com/index.js'})
+
+```
 
 #### stream.url.add
 
+```js
+router.on('/example', function(request, stream) {
+    // create new url from blob object
+    let newUrl = stream.url.add(...request.data.url);
+    document.body.append(
+      x('a', {href: newUrl}, 'test-link')
+    )
+
+})
+
+router.rout('/example', {url: ['some test', 'plain/text','utf-8']})
+
+```
+
 #### stream.url.del
 
-#### stream.base64.enc
+```js
+router.on('/example', function(request, stream) {
+    // create new url from blob object
+    let newUrl = stream.url.add(...request.data.url),
+    lnk = x('a', {
+      href: newUrl,
+      onclick: function(){
+        lnk.remove();
 
-#### stream.base64.dec
+        setTimeout(function(){
+          // delete new url link
+          stream.url.del(newUrl);
+        },3000)
 
-#### stream.hex.enc
+      }
+    }, 'test-link');
 
-#### stream.hex.dec
+    document.body.append(lnk)
+})
 
-#### stream.uint8.enc
+router.rout('/example', {url: ['some test', 'plain/text','utf-8']})
 
-#### stream.uint8.dec
+```
 
 #### cookies
 
@@ -422,18 +544,18 @@ router.on('/', function(request, stream) { // add cookie
 
 #### sessionStorage
 
-* stream.setSs
-* stream.getSs
-* stream.delSs
+* stream.ssSet
+* stream.ssGet
+* stream.ssDel
 
 ```js
 
 router.on('/', function(request, stream) {
 
-  stream.setSs('key', {test: 'working'}) // set stringified session storage
-  .delSs('key') // delete session storage item
+  stream.ssSet('key', {test: 'working'}) // set stringified session storage
+  .ssDel('key') // delete session storage item
 
-  console.log(stream.getSs('key')) // get parsed session storage
+  console.log(stream.ssGet('key')) // get parsed session storage
 
 })
 
@@ -441,50 +563,18 @@ router.on('/', function(request, stream) {
 
 #### localStorage
 
-* stream.setLs
-* stream.getLs
-* stream.delLs
+* stream.lsSet
+* stream.lsGet
+* stream.lsDel
 
 ```js
 
 router.on('/', function(request, stream) {
-  stream.setLs('key', {test: 'working'}) // set stringified local storage
-  .delLs('key') // delete local storage item
+  stream.lsSet('key', {test: 'working'}) // set stringified local storage
+  .lsDel('key') // delete local storage item
 
-  console.log(stream.getLs('key')) // get parsed local storage
+  console.log(stream.lsGet('key')) // get parsed local storage
 
 })
 
 ```
-
-
-# goals
-
-* create a browser web framework  that is ideal for full-stack js development.
-
-* the creation of the framework "must" be speed oriented. the code used to create jsnode
-  will not contain any so called "synthetic-sugar" that is detrimental to the speed of end
-  product. native js must be used over modern js concerning speed.
-  the user is free to use any "synthetic-sugar" they wish in creating their app.
-
-* the framework should not obfuscate an entry/mid level developers understanding of js,
-  as many browser based frameworks do. there will be no human made euphemisms or concepts
-  that confuse or mislead the user in their understanding of how javascript works.
-
-* the framework should be usable for entry/mid level developers and easily extendable/
-  highly customizable for mid/high level developers.
-
-* the framework will have its own optional high speed rendering engine but this
-  engine can be replaced entirely with any other template engine the user wishes to implement.
-  furthermore, the render method will be able to use vanilla javascript / plain html as
-  an alternative.
-
-* the framework will produce a spa (single page app) without the need for any specific server
-  modifications. it will rely on browser storage as opposed to history state to store state data.
-
-* all router stream methods are to be optional. the user should be able to include/exclude
-  all stream methods on a per-case basis to their build.
-
-* the framework will never force a user to use external dependencies
-
-* the framework must have a close to zero learning curve duration
