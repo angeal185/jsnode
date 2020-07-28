@@ -1,11 +1,6 @@
 # jsnode
 A speed oriented javascript browser web framework with nodejs like syntax
 
-# status
-* framework ~ working but under feature development
-* documentation ~ incomplete
-
-
 # build
 
 ```js
@@ -16,8 +11,6 @@ build()
 
 
 ```
-
-# setup
 
 
 # defaults
@@ -38,20 +31,19 @@ let app_main = x('div');
 let defaults = Object.assign(xdata.default, {
   app_main: app_main,
   each: {
-    before: function(dest) {
+    before: function(dest) { // tasks to be carried out prior to each rout
       // return false;  cancel rout
       return true // continue to rout
     },
-    after: function(dest) {
+    after: function(dest) { // tasks to be carried out after each rout
       document.title = dest.slice(1)
     }
   },
-  init: function(){
+  init: function(){ // tasks to be carried out on init
     xutils.build(xdata, xviews['build'](app_main));
-
     return this;
   },
-  render: function(stream, path, data, cb){
+  render: function(stream, path, data, cb){ // tasks to be carried out on render
     xrender(stream, xviews[path], data, xdata[path], cb);
     return this;
   }
@@ -63,7 +55,6 @@ export { defaults, app_main }
 
 ```js
 // app/data/xdata.mjs
-
 
 const xdata = {
   default:{
@@ -97,7 +88,7 @@ const xdata = {
        }
      }
   },
-  // rout default data
+  // rout default data below
   index: {
     msg: 'Big things have small beginnings.'
   },
@@ -115,7 +106,7 @@ export { xdata }
 
 ```js
 
-import { router } from './app/modules/jsnode.mjs';
+import { router, x } from './app/modules/jsnode.mjs';
 
 router.on('/', function(request, stream) {
 
