@@ -133,7 +133,6 @@ router.on('/', function(request, stream) {
 
 #### router.on
 ```js
-//router.on
 import { router } from './jsnode.mjs';
 
 router.on('/', function(req, res) {
@@ -145,7 +144,7 @@ router.on('/', function(req, res) {
 
 #### router.off
 ```js
-//router.off
+
 import { router } from './jsnode.mjs';
 
 router.on('/delete_rout', function(request,stream){
@@ -158,7 +157,6 @@ router.on('/delete_rout', function(request,stream){
 #### router.rout
 
 ```js
-//router.rout
 
 router.on('/test_basic', function(request, stream) {
   console.log(request.data) // {test:'basic'}
@@ -189,7 +187,6 @@ router.rout('/test_params?test=ok', {
 #### stream.render
 
 ```js
-//stream.render
 
 router.on('/', function(request, stream) {
 
@@ -221,7 +218,6 @@ router.on('/', function(request, stream) {
 
 redirect path
 ```js
-//stream.render
 
 router.on('/path1', function(request, stream) {
 
@@ -237,7 +233,6 @@ router.on('/path1', function(request, stream) {
 
 replace state
 ```js
-//stream.render
 
 router.on('/path1', function(request, stream) {
 
@@ -254,7 +249,7 @@ router.on('/path1', function(request, stream) {
 #### stream.download
 
 ```js
-//stream.download
+
 router.on('/download', function(request, stream) {
 
     let data = JSON.stringify({"test":"!@#$<}(*&^%$ok"});
@@ -272,7 +267,6 @@ router.on('/download', function(request, stream) {
 #### stream.fetch
 
 ```js
-//stream.fetch
 
 router.on('/fetch_default', function(request, stream) {
 
@@ -313,7 +307,7 @@ router.on('/fetch_default', function(request, stream) {
 #### stream.params
 
 ```js
-//stream.params
+
 router.on('/', function(request, stream) {
 
   console.log(request)
@@ -343,7 +337,7 @@ router.on('/', function(request, stream) {
 #### stream.js
 
 ```js
-//stream.params
+
 router.on('/', function(r, s) {
 
   let data = {
@@ -567,5 +561,171 @@ router.on('/', function(request, stream) {
   console.log(stream.lsGet('key')) // get parsed local storage
 
 })
+
+```
+
+
+# XSCRIPT
+xscript is the pure javascript template engine used for jsnode
+
+* xscript works directly with the dom
+* xscript uses no regex/unsafe functions
+* xscript is about as close to using vanilla js speed as it gets.
+
+```js
+
+/**
+ *  @x(tag, ...arguments)
+ *  @param {string} tag ~ html tag
+ *  @param {object|string|function} arguments
+ **/
+
+```
+
+#### xscript element basic
+
+```js
+// create a basic element with text
+
+let item = x('p', 'example plain text');
+
+console.log(item)
+// <p>example plain text</p>
+
+document.body.append(item)
+
+```
+
+#### xscript element attributes
+```js
+// create an element with multiple attributes
+
+let item = x('input', {
+  id: 'testid',
+  class: 'class1 class2 class3',
+  type: 'text',
+  placeHolder: 'example attributes',
+  style: 'color:red;background:black'
+})
+
+console.log(item)
+// <input id="testid" class="class1 class2 class3" type="text" style="color:red;background:black" placeholder="example attributes">
+
+```
+
+#### xscript element events
+```js
+
+let item = x('p', {
+  id: 'testid',
+  class: 'class1 class2 class3',
+  onclick: function(){
+    console.log('item clicked!');
+  },
+  onmouseover: function(){
+    console.log('item mouseover!');
+  }
+})
+
+document.body.append(item);
+
+item.click()
+// item clicked!
+item.onmouseover()
+// item mouseover!
+```
+
+#### xscript element nested
+```js
+
+let items = x('p',
+  x('p', 'level 2.1'),
+  "some text",
+  x('p', 'level 2.2',
+    x('p', 'level 3',
+      x('p', 'level 4.1'),
+      function(){
+        // some function element
+        return x('p', 'level 4.2')
+      },
+      x('p', 'level 4.3'),
+      function(){
+        return 'some function text node'
+      }
+    )
+  ),
+  'level 1'
+)
+
+document.body.append(items);
+```
+
+#### xscript element reference
+
+once created, an node can be referenced like any other js node.
+
+```js
+
+let item = x('p')
+item.id = 'testid';
+item.textContent = 'click me';
+
+let somefunction = function(){
+  item.removeEventListener('click', somefunction);
+  item.textContent = 'clicked'
+  somefunction = item = null;
+  console.log(somefunction, item)
+}
+
+item.addEventListener('click', somefunction, false)
+
+document.body.append(item);
+
+```
+
+#### xscript nested text nodes
+```js
+
+let items = x('p',
+  'prepended text',
+  x('p', 'basic 1', 'basic 2', () => 'basic 3'),
+  'nested text',
+  x('p', 'basic 4', 'basic 5', () => 'basic 6'),
+  'appended text text'
+);
+
+console.log(items);
+/*
+<p>
+    "prepended text"
+    <p>"basic 1" "basic 2" "basic 3"</p>
+    "nested text"
+    <p>"basic 4" "basic 5" "basic 6"</p>
+    "appended text text"
+</p>
+*/
+```
+
+#### xscript nested functions
+
+* functions should only return element or text nodes.
+
+```js
+
+let items = x('p',
+  () => 'you',
+  () => 'can',
+  () => 'add',
+  () => 'as',
+  () => 'many',
+  () => x('p','as'),
+  () => 'you',
+  () => 'want',
+  () => 'wherever',
+  () => 'you',
+  () => 'want',
+);
+
+console.log(items);
 
 ```
