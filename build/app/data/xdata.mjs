@@ -1,15 +1,16 @@
 
 const xdata = {
   default:{
-    version: '1.0.0', // don't delete me
-    origin: 'http://localhost:4443',
+    version: '1.0.0',
+    origin: 'http://localhost:8000',
     params: true,
     error: '/error',
     base_path: '/index',
     delete_meta: 10000,
+    webmanifest: './manifest.webmanifest',
     base_script_name: 'main',
     styles:[{
-      href: 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css',
+      href: './app/css/main.css',
       rel: 'stylesheet'
     }],
     js_head:[],

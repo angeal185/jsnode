@@ -5,9 +5,6 @@ import { router } from '../modules/jsnode.mjs';
 const xviews = {
   build(app_main){
     let item = x('main-view',
-    x('nav', {class:'navbar navbar-dark bg-dark justify-content-center'},
-      x('a',{class: 'navbar-brand'}, 'jsnode')
-    ),
     x('div', {
         class: 'container'
       }, app_main)
@@ -21,18 +18,12 @@ const xviews = {
 
   //views
   index(stream, data){
-    let item = x('div', {class: 'mt-4'},
-      x('p', data.msg)
-    )
+    let item = x('div', x('p', data.msg));
 
     return item;
   },
   home(stream, data){
-    let item = x('div', {
-        class: 'mt-4'
-      },
-      x('p', data.msg)
-    )
+    let item = x('div', x('p', data.msg));
 
     return item;
   }

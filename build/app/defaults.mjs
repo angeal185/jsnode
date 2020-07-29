@@ -12,7 +12,7 @@ let defaults = Object.assign(xdata.default, {
   each: {
     before: function(dest) {
       // return false;  cancel rout
-      return true // continue to rout
+      return true; // continue to rout
     },
     after: function(dest) {
       document.title = dest.slice(1)
@@ -20,7 +20,6 @@ let defaults = Object.assign(xdata.default, {
   },
   init: function(){
     xutils.build(xdata, xviews['build'](app_main));
-    
     return this;
   },
   render: function(stream, path, data, cb){

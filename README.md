@@ -12,7 +12,6 @@ build()
 
 ```
 
-
 # defaults
 
 * all default vals/functions are fully customizable
@@ -64,6 +63,7 @@ const xdata = {
     error: 'error', // error handler listener
     base_path: '/index', // app base path
     delete_meta: 10000, // automatically remove meta timeout in ms || 0/false
+    webmanifest: './manifest.webmanifest', // webmanifest path || false
     base_script_name: 'main', //main script name attr
     styles:[{ // styles to be added
       href: 'app/css/app.css',

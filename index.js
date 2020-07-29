@@ -30,6 +30,8 @@ function build(){
   copyFolderSync(app, cwd + '/app');
   copyFolderSync(base, cwd + '/app/modules');
   fs.copyFileSync(dir + '/build/index.html', cwd + '/index.html');
+  fs.copyFileSync(dir + '/build/sw.js', cwd + '/sw.js');
+  fs.copyFileSync(dir + '/build/manifest.webmanifest', cwd + '/manifest.webmanifest');
 }
 
 
